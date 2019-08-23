@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>EasyCalculator</title>
+    <!--<link rel="stylesheet" type="text/css" href="calsulator.css">-->
+    <style type="text/css">
+        *{
+            margin: 0px;
+            padding: 0px;
+            font-family: 'Open Sans', sans-serif;
+        }
+        #calsulator{
+            /*background-color: dimgray;*/
+            margin: 10% auto;
+            box-shadow: 4px 4px #3d4a65;
+            border-radius: 10%;
+            position: relative;
+            width: 280px;
+            height: 330px;
+        }
+
+        #inout{
+            border-radius: 30px;
+            background-color: rgba(67, 109, 109, 0.93);
+            margin: 2px auto;
+            width: 96%;
+            height: 22%;
+            text-align: right;
+            font-size: 36px;
+            line-height: 2;
+            /*text-indent: 0px;*/
+        }
+
+        #left_panel{
+            width: 75%;
+            height: auto;
+            position: relative;
+            float: left;
+        }
+        #right_panel{
+            width: 25%;
+            height: auto;
+            position: relative;
+            float: right;
+        }
+        #right_panel button{
+            background-color: goldenrod;
+        }
+
+        button.input{
+            margin: 5px 0px 0px 5px;
+            width: 60px;
+            height: 45px;
+            background-color: darkslategrey;
+            border-radius: 20%;
+            color: snow;
+            font-size: 24px;
+        }
+        button[value="0"]{
+            margin: 5px 0px 0px 6px;
+            width: 128px;
+            text-align: left;
+            text-indent: 20px;
+        }
+        button#ccc{
+            font-size: 22px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div id = "calsulator">
+    <div id = "inout">
+
+    </div>
+    <div id = "panel">
+        <div id = "left_panel">
+            <div id = con_panel>
+                <button value="c" id = "ccc" class="input" onclick="clearNum()">AC</button>
+                <button value="_" class="input" onclick="changeNum()">±</button>
+                <button value="%" class="input" onclick="operator(this.value)">%</button>
+            </div>
+            <div id = "num_panel">
+                <button value="1" class="input" onclick="getNum(this.value)" touchstart="getNum(this.value)">1</button>
+                <button value="2" class="input" onclick="getNum(this.value)">2</button>
+                <button value="3" class="input" onclick="getNum(this.value)">3</button>
+                <button value="4" class="input" onclick="getNum(this.value)">4</button>
+                <button value="5" class="input" onclick="getNum(this.value)">5</button>
+                <button value="6" class="input" onclick="getNum(this.value)">6</button>
+                <button value="7" class="input" onclick="getNum(this.value)">7</button>
+                <button value="8" class="input" onclick="getNum(this.value)">8</button>
+                <button value="9" class="input" onclick="getNum(this.value)">9</button>
+                <button value="0" class="input" onclick="getNum(this.value)">0</button>
+                <button value="." class="input" onclick="getNum(this.value)">.</button>
+            </div>
+        </div>
+        <div id = "right_panel">
+            <button value="+" class="input" onclick="operator(this.value)">+</button>
+            <button value="−" class="input" onclick="operator(this.value)">−</button>
+            <button value="*" class="input" onclick="operator(this.value)">×</button>
+            <button value="/" class="input" onclick="operator(this.value)">÷</button>
+            <button value="=" class="input" onclick="getResult()">=</button>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // document.getElementById("num_panel").addEventListener("click", clearNum());
+    var result="";
+    var num1 = -1;
+    var num2 = -1;
+    var oper = '';
+    var isAc = true;
+
+    function init() {
+        num1 = -1;
+        num2 = -1;
+        oper = "";
+        result = "";
+    }
+
+    function getNum(num) {
+        // alert("sas");
+        if(num === "." &&  result.charAt(result.length -1) === ".")
+            return;
+        if(isAc){
+            isAc = false;
+            document.getElementById("ccc").innerText = "C";
+        }
+        result += num;
+        if(result.length > 12)
+            result = result.substr(0,12);
+        document.getElementById("inout").innerText = result;
+    }
+
+    function clearNum() {
+        // alert("sas");
+        result = ""
+        document.getElementById("inout").innerText = result;
+        if(document.getElementById("ccc").innerText === "AC"){
+            init();
+        }
+        document.getElementById("ccc").innerText = "AC";
+        isAc = true;
+    }
+
+    function changeNum() {
+        if(result.charAt(0) === "-")
+            result = result.substr(1,result.length);
+        else
+            result = "-" + result;
+        document.getElementById("inout").innerText = result;
+    }
+
+    function operator(value) {
+        num1 = Number(result);
+        oper = value;
+        result = "";
+        if(!isNaN(num1))
+        {
+            if(value === "*")
+                value = "×";
+            else if(value === "/")
+                value = "÷";
+            document.getElementById("inout").innerText = value;
+        }
+        else
+        {
+            document.getElementById("inout").innerText = "NaN";
+            clearNum();
+            return;
+        }
+
+    }
+    function getResult() {
+        // alert("aa")
+        if(oper == "" || oper == null || result == "")
+            return;
+        num2 = Number(result);
+        // alert(oper);
+        if(isNaN(num2))
+        {
+            // alert(num2);
+            result = "";
+            document.getElementById("inout").innerText = "NaN";
+            num2 = -1;
+            return;
+        }
+        var num3 = 0;
+
+        switch (oper) {
+            case "+":
+                num3 = num1 + num2;break;
+            case "−":
+                num3 = num1 - num2;break;
+            case "*":
+                num3 = num1 * num2;break;
+            case "/":
+                num3 = num1 / num2;break;
+            case "%":
+                num3 = num1 % num2;break;
+            default:
+                num1 = -1;num2 = -1;
+                clearNum();
+        }
+        // alert(num3);
+        init();
+        document.getElementById("inout").innerText = String(num3).substr(0,13);
+    }
+
+</script>
+</body>
+</html>
